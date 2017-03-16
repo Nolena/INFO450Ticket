@@ -13,20 +13,16 @@ class Ticket
 private:
 	int iD;
 	char status;
-	string type;
+	char type;
 	char priority;
-	string name;
-	string description;
+	char name[50];
+	char description[500];
 	int userImpact = 0;
 	static int idGenerator;
 
 public:
 	Ticket() {};
 	Ticket(static int idGenerator, int iD);
-	Ticket(int i, char s, string t, char p, string n, string d, int u)
-	{
-		iD = i, status = s, type = t, priority = p, name = n, description = d, userImpact = u;
-	}
 	void ShowTicket();
 	void CaptureTicket();
 	void CloseTicket();
@@ -42,17 +38,17 @@ Ticket::Ticket( static int idGenerator, int iD)
 	{
 		int typeID;
 		cout << "What is the name of the caller?" << endl;
-		getline(cin, name);
+		gets_s(name);
 		cout << "What is the issue type? 0 = Server, 1 = Application, 2 = Access" << endl;
 		cin >> typeID;
-		if (typeID = 0)
-			type = "Server";
+		if (typeID = 0) 
+			type = 'Ser';
 		if (typeID = 1)
-			type = "Application";
+			type = 'App';
 		if (typeID = 2)
-			type = "Access";
+			type = 'Acc';
 		cout << "Description of issue?" << endl;
-		getline(cin, description);
+		gets_s(description);
 		cout << "How many users are impacted?" << endl;
 		cin >> userImpact;
 		if (userImpact < 10)
@@ -61,6 +57,8 @@ Ticket::Ticket( static int idGenerator, int iD)
 			priority = 'MED';
 		if (userImpact > 50)
 			priority = 'HIGH';
+		cin.clear();
+		cin.ignore();
 	}
 
 	void Ticket::ShowTicket() 
@@ -79,8 +77,6 @@ Ticket::Ticket( static int idGenerator, int iD)
 	{
 
 	}
-
-
 
 	int main()
 	{
