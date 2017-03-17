@@ -12,89 +12,141 @@ class Ticket
 {
 private:
 	int iD;
-	char status;
+	string status;
 	char type;
-	char priority;
-	char name[50];
-	char description[500];
+	string priority;
+	string name;
+	string description;
 	int userImpact = 0;
 	static int idGenerator;
 
 public:
-	Ticket() {};
-	Ticket(static int idGenerator, int iD);
+	Ticket() 
+	{
+		iD = idGenerator;
+		idGenerator++;
+		status = "Open";
+	};
 	void ShowTicket();
 	void CaptureTicket();
 	void CloseTicket();
 };
 
-Ticket::Ticket( static int idGenerator, int iD) 
-{
-	idGenerator = 1;
-	iD = idGenerator++;
+	int Ticket::idGenerator = 0;
 
-}
 	void Ticket::CaptureTicket()
 	{
-		int typeID;
-		cout << "What is the name of the caller?" << endl;
-		gets_s(name);
-		cout << "What is the issue type? 0 = Server, 1 = Application, 2 = Access" << endl;
-		cin >> typeID;
-		if (typeID = 0) 
-			type = 'Ser';
-		if (typeID = 1)
-			type = 'App';
-		if (typeID = 2)
-			type = 'Acc';
-		cout << "Description of issue?" << endl;
-		gets_s(description);
-		cout << "How many users are impacted?" << endl;
-		cin >> userImpact;
-		if (userImpact < 10)
-			priority = 'LOW';
-		if (userImpact >= 10 && userImpact < 50)
-			priority = 'MED';
-		if (userImpact > 50)
-			priority = 'HIGH';
 		cin.clear();
 		cin.ignore();
+		cout << "What is the name of the caller?" << endl;
+		getline(cin,name);
+		cout << "What is the issue type? (S)erver, (A)pplication, A(C)cess" << endl;
+		cin >> type;
+		cin.ignore();
+		cout << "Description of issue?" << endl;
+		getline(cin,description);
+		cout << "How many users are impacted?" << endl;
+		cin >> userImpact;
+		cin.clear();
+		cin.ignore();
+		cout << "Issue ID: " << iD << endl;
 	}
 
 	void Ticket::ShowTicket() 
 	{
 		cout << "----------------------" << endl;
 		cout << "Ticket ID: " << iD << endl;
-		cout << "Name: " << name << endl;
 		cout << "Type of issue: " << type << endl;
-		cout << "Description of issue: " << description << endl;
+		switch (type) 
+		{
+		default:
+			cout << "Unspecified" << endl;
+			break;
+
+		case 's':
+		case 'S':
+			cout << "Server" << endl;
+			break;
+
+		case 'a':
+		case 'A':
+			cout << "Application" << endl;
+			break;
+
+		case 'c':
+		case 'C':
+			cout << "Access" << endl;
+			break;
+		}
 		cout << "Status: " << status << endl;
-		cout << "Priority: " << priority << endl;
+		cout << "Description of issue: " << description << endl;
+		cout << "User: " << name << endl;
+		cout << "Users Impacted: " << userImpact << endl;
+		cout << "Priority: ";
+		if (userImpact < 10) 
+		{
+			cout << "LOW" << endl;
+		}
+			
+		else if (userImpact >= 10 && userImpact < 50) 
+		{
+			cout << "MEDIUM" << endl;
+		}
+		else if (userImpact >= 50) 
+		{
+			cout << "HIGH" << endl;
+		}
+		else 
+		{
+			cout << "NONE" << endl;
+		}
 		cout << "----------------------" << endl;
 	}
 
 	void Ticket::CloseTicket() 
 	{
-
+		status = "Closed";
+		cout << "Ticket " << iD << " has been closed" << endl;
 	}
 
 	int main()
 	{
 		const int MAX = 100;
-
+		char create;
+		const char no = 'n';
+		const char No = 'N';
+		const char yes = 'y';
+		const char Yes = 'Y';
 		Ticket myTickets[MAX];
+		int number = 0;
 
-		for (int i = 0; i < MAX; i++)
+		do
 		{
-			myTickets[i].CaptureTicket();
-		}
+			cout << "Create new ticker? (Y)es or (N)o?" << endl;
+			cin >> create;
 
-		for (int i = 0; i < MAX; i++)
-		{
-			myTickets[i].ShowTicket();
-		}
+			if (create == yes || create == Yes)
+			{
+				myTickets[number].CaptureTicket();
+				++number;
+			}
 
-		return 0;
-		
+			else if (create == no || create == No)
+			{
+				for (int i = 0; i < number; ++i)
+				{
+					myTickets[i].ShowTicket();
+					myTickets[0].CloseTicket();
+
+					return 0;
+				}
+			}
+
+			else
+			{
+				cout << "Invalid selection, please try again!" << endl;
+			}
+		} while (create != no || create != No);
+	
 	}
 
